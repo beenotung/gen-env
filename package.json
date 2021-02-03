@@ -1,0 +1,34 @@
+{
+  "name": "gen-env",
+  "version": "0.1.0",
+  "description": "auto generate .env template by scanning source code",
+  "bin": "gen-env",
+  "keywords": [
+    "env",
+    "generate",
+    "code scan",
+    "cli",
+    "tool",
+    "cmd"
+  ],
+  "author": {
+    "name": "Beeno Tung",
+    "email": "aabbcc1241@yahoo.com.hk",
+    "url": "https://beeno-tung.surge.sh"
+  },
+  "license": "BSD-2-Clause",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beenotung/gen-env.git"
+  },
+  "bugs": {
+    "url": "https://github.com/beenotung/gen-env/issues"
+  },
+  "homepage": "https://github.com/beenotung/gen-env#readme",
+  "scripts": {
+    "format": "prettier --write gen-env"
+  },
+  "devDependencies": {
+    "prettier": "^2.2.1"
+  }
+}

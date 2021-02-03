@@ -1,0 +1,102 @@
+#!/usr/bin/env node
+let fs = require('fs');
+let path = require('path');
+
+let dir = process.argv[2] || '.';
+
+let skipNames = ['node_modules', '.git'];
+let fileSuffixes = ['.ts', '.tsx', '.js', '.jsx'];
+let envFiles = ['.env', '.env.example'];
+
+function scanDir(dir, name_set = new Set()) {
+  // console.log('scanDir', dir);
+  let files = fs.readdirSync(dir);
+  let isRoot = files.includes('package.json');
+  if (isRoot) {
+    name_set = new Set();
+  }
+  files.forEach((file) => {
+    if (skipNames.includes(file)) {
+      return;
+    }
+    file = path.join(dir, file);
+    let stat;
+    try {
+      stat = fs.statSync(file);
+    } catch (error) {
+      // e.g. bad symbolic link
+      console.log('failed to read file:', file);
+      return;
+    }
+    if (stat.isDirectory()) {
+      scanDir(file, name_set);
+      return;
+    }
+    if (!stat.isFile()) return;
+    if (!fileSuffixes.some((suffix) => file.endsWith(suffix))) return;
+    scanFile(file, name_set);
+  });
+  if (!isRoot || name_set.size === 0) return;
+  envFiles.forEach((file) => {
+    file = path.join(dir, file);
+    saveEnv(file, name_set);
+  });
+}
+
+function scanFile(file, name_set) {
+  // console.log('scanFile', file);
+  let text = fs.readFileSync(file, 'utf-8');
+  parseEnvNames(text, name_set);
+}
+
+let env_regexes = [
+  // e.g. process.env['REACT_APP_API_SERVER']
+  /env\['(\w*)'\]/i,
+  // e.g. process.env["REACT_APP_API_SERVER"]
+  /env\["(\w*)"\]/i,
+  // e.g. process.env.REACT_APP_API_SERVER
+  /env\.(\w*)/i,
+  // e.g. const { REACT_APP_API_SERVER, NODE_ENV } = process.env
+  /{(.*)}\s*=\s*env/i,
+];
+function parseEnvNames(text, name_set) {
+  let name_arr = [];
+  env_regexes.forEach((regex) => parseAll(text, regex, name_arr));
+  name_arr.forEach((name) =>
+    name.split(',').forEach((name) => name_set.add(name.trim())),
+  );
+  return name_set;
+}
+
+function parseAll(text, regex, name_arr) {
+  for (;;) {
+    let match = text.match(regex);
+    if (!match) break;
+    name_arr.push(match[1]);
+    text = text.replace(match[0], '');
+  }
+  return name_arr;
+}
+
+function saveEnv(file, all_names) {
+  let env_text = '';
+  if (fs.existsSync(file)) {
+    env_text = fs.readFileSync(file, 'utf-8');
+  }
+  let new_lines = [];
+  all_names.forEach((name) => {
+    let line = name + '=';
+    if (!env_text.includes(line)) {
+      new_lines.push(line);
+    }
+  });
+  if (new_lines.length === 0) {
+    console.log('skip:', file);
+    return;
+  }
+  let content = [env_text.trim(), ...new_lines].join('\n') + '\n';
+  fs.writeFileSync(file, content);
+  console.log('save:', file);
+}
+
+scanDir(dir);
