@@ -98,7 +98,7 @@ function saveEnv(file, all_names) {
     console.log('skip:', file);
     return;
   }
-  let content = [env_text.trim(), ...new_lines].join('\n') + '\n';
+  let content = [env_text.trim(), ...new_lines].join('\n').trim() + '\n';
   fs.writeFileSync(file, content);
   console.log('save:', file);
 }
