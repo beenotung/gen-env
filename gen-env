@@ -46,6 +46,8 @@ function scanDir(dir, name_set = new Set()) {
 function scanFile(file, name_set) {
   // console.log('scanFile', file);
   let text = fs.readFileSync(file, 'utf-8');
+  // e.g. dotenv.config()
+  text = text.replace(/dotenv/gi, '');
   parseEnvNames(text, name_set);
 }
 
