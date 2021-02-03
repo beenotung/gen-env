@@ -59,6 +59,8 @@ let env_regexes = [
   // e.g. process.env.REACT_APP_API_SERVER
   /env\.(\w*)/i,
   // e.g. const { REACT_APP_API_SERVER, NODE_ENV } = process.env
+  /{(.*)}\s*=\s*process.env/i,
+  // some gulp files like to shortcut with `const env = process.env`
   /{(.*)}\s*=\s*env/i,
 ];
 function parseEnvNames(text, name_set) {
