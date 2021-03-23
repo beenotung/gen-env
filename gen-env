@@ -8,9 +8,12 @@ let dir = process.argv[2] || '.';
 let skipNames = ['node_modules', '.git'];
 let fileSuffixes = ['.ts', '.tsx', '.js', '.jsx'];
 let envFiles = ['.env', '.env.example'];
+let rootNameSet = new Set();
+let lastReportNameCount = 0;
 
-function scanDir(dir, name_set = new Set()) {
+function scanDir(dir, name_set) {
   // console.log('scanDir', dir);
+  let preSize = name_set.size;
   let files = fs.readdirSync(dir);
   let isRoot = files.includes('package.json');
   if (isRoot) {
@@ -37,6 +40,15 @@ function scanDir(dir, name_set = new Set()) {
     if (!fileSuffixes.some((suffix) => file.endsWith(suffix))) return;
     scanFile(file, name_set);
   });
+  if (
+    !isRoot &&
+    name_set === rootNameSet &&
+    name_set.size !== lastReportNameCount &&
+    name_set.size !== preSize
+  ) {
+    console.warn('missing package.json? dir:', dir);
+    lastReportNameCount = name_set.size;
+  }
   if (!isRoot || name_set.size === 0) return;
   envFiles.forEach((file) => {
     file = path.join(dir, file);
@@ -104,4 +116,7 @@ function saveEnv(file, all_names) {
   console.log('save:', file);
 }
 
-scanDir(dir);
+scanDir(dir, rootNameSet);
+if (rootNameSet.size > 0) {
+  envFiles.forEach((file) => saveEnv(file, rootNameSet));
+}
