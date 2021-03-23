@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 let fs = require('fs');
 let path = require('path');
+let os = require('os');
 
 let dir = process.argv[2] || '.';
 
@@ -98,7 +99,7 @@ function saveEnv(file, all_names) {
     console.log('skip:', file);
     return;
   }
-  let content = [env_text.trim(), ...new_lines].join('\n').trim() + '\n';
+  let content = [env_text.trim(), ...new_lines].join(os.EOL).trim() + os.EOL;
   fs.writeFileSync(file, content);
   console.log('save:', file);
 }
