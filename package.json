@@ -1,8 +1,10 @@
 {
   "name": "gen-env",
-  "version": "0.1.3",
+  "version": "0.2.0",
   "description": "auto generate .env template by scanning source code",
-  "bin": "gen-env",
+  "bin": {
+    "gen-env": "gen-env"
+  },
   "keywords": [
     "env",
     "generate",
