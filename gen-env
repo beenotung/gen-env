@@ -107,6 +107,7 @@ function saveEnv(file, all_names) {
       new_lines.push(line);
     }
   });
+  new_lines.sort()
   if (new_lines.length === 0) {
     console.log('skip:', file);
     return;
