@@ -27,6 +27,9 @@
   "bin": {
     "gen-env": "gen-env"
   },
+  "files": [
+    "gen-env"
+  ],
   "scripts": {
     "format": "prettier --write gen-env"
   },
