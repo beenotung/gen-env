@@ -2,9 +2,6 @@
   "name": "gen-env",
   "version": "0.2.0",
   "description": "auto generate .env template by scanning source code",
-  "bin": {
-    "gen-env": "gen-env"
-  },
   "keywords": [
     "env",
     "generate",
@@ -23,10 +20,13 @@
     "type": "git",
     "url": "git+https://github.com/beenotung/gen-env.git"
   },
+  "homepage": "https://github.com/beenotung/gen-env#readme",
   "bugs": {
     "url": "https://github.com/beenotung/gen-env/issues"
   },
-  "homepage": "https://github.com/beenotung/gen-env#readme",
+  "bin": {
+    "gen-env": "gen-env"
+  },
   "scripts": {
     "format": "prettier --write gen-env"
   },
