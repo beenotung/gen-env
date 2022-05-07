@@ -2,7 +2,9 @@
 
 auto generate .env template by scanning source code
 
-[![npm Package Version](https://img.shields.io/npm/v/gen-env.svg?maxAge=2592000)](https://www.npmjs.com/package/gen-env)
+[![npm Package Version](https://img.shields.io/npm/v/gen-env)](https://www.npmjs.com/package/gen-env)
+[![npm Package Version](https://img.shields.io/npm/dy/gen-env)](https://www.npmtrends.com/gen-env)
+
 
 ## Features
 - [x] auto skip some folders
